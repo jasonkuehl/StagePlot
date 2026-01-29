@@ -5,7 +5,6 @@ services:
     ports:
       - "8088:80"
     volumes:
-      # Mount folders so you can edit files without rebuilding
       - ./Images/stages:/usr/share/nginx/html/Images/stages
       - ./Images/custom:/usr/share/nginx/html/Images/custom
       - ./JS:/usr/share/nginx/html/JS
