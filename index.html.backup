@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+
+        <!-- Add SEO or smth idk -->
+        <meta charset="utf-8">
+        <meta name="description" content="A website that allows you to easily make and share your stage plots">
+        <meta name="keywords" content="stage, plot, plotting, band, stage creation">
+        <meta name="author" content="Noah Harper">
+        <meta name="author" content="Jason Harper">
+
+        <!-- Create embed thingamajig -->
+        <meta property="og:title" content="Band Stage Plot" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://www.bandstageplot.com/" />
+        <meta property="og:locale" content="en_US" />
+        <meta property="og:description" content="A website that allows you to easily make and share your stage plots" />
+        <meta property="og:image" content="https://diymusician.cdbaby.com/wp-content/uploads/2011/07/Screen-shot-2011-07-15-at-1.08.32-PM2.png" />
+
+        <!-- Import favicon -->
+        <link rel="icon" type="image/x-icon" href="./Images/favicon.ico">
+        <link rel="shortcut icon" type="image/x-icon" href="./Images/favicon.ico">
+
+        <!-- CSS imports -->
+        <link rel="stylesheet" href="./CSS/style.css">
+        <link rel="stylesheet" href="./CSS/items.css">
+        <link rel="stylesheet" href="./CSS/modal.css">
+        <link rel="stylesheet" href="./CSS/dark.css">
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
+
+        <!-- JS imports -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"></script>
+        <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+
+        <!-- Set title -->
+        <title>Band Stage Plot</title>
+
+    </head>
+    <body>
+
+        <!-- Modal --> <div class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <div id="tabs">
+                    <ul>
+                        <li><a href="#tabs-1">About</a></li>
+                        <li><a href="#tabs-2">Functions</a></li>
+                        <li><a href="#tabs-3">Review</a></li>
+                    </ul>
+                    <!-- Welcome tab --><div id="tabs-1">
+                        <center>
+                            <h1>
+                                Welcome to BandStagePlot!
+                            </h1>
+                            <h3>
+                                This is where you can create your stage plot by dragging and dropping the elements to your desired location.
+                                To get items onto the page, just click on whatever item you want in the side bar.
+                                To get rid of items, drag and drop them into the item bar.
+                                You can always come back to this page by clicking menu icon in the bottom left corner.
+                            </h3>
+                            <h2 style="color: red;">
+                                Attention mobile users! This website does not work on any touchscreen devices. Please move to a desktop workstation to use this website.
+                            </h2>
+                        </center>
+                    </div>
+                    <!-- Functions tab --><div id="tabs-2">
+                        <center>
+                            <h1>
+                                Functions
+                            </h1>
+                            <h3>
+                                <button onclick="navigator.clipboard.writeText('https://www.bandstageplot.com/'); alert('Link copied!')">Copy Site Link</button><br>
+                                <button onclick="capture()">Screenshot</button><br>
+                                <button onclick="toggleFullscreen()" id="fs-button">Fullscreen</button><br>
+                                <button onclick="location.reload()">Reset</button><br><br>
+                                <form>
+                                    <h2 for="bg-image">Import a Background Image</h2>
+                                    <input type="file" id="bg-image" name="bg-image" accept="image/*" placeholder="Example: user_background.png">
+                                </form>
+                            </h3>
+                
+                            <label class="switch">
+                                <input type="checkbox" onclick="darkMode()">
+                                <span class="slider round"></span>
+                                <h3 for="switch" style="font-size: 24px; position: relative; right: 225%; bottom: 130%; white-space: nowrap; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">Dark Mode</h3>
+                            </label>
+                        </center>
+                    </div>
+                    <!-- Review tab --><div id="tabs-3">
+                        <center>
+                            <h3>
+                                <form id="review">
+                                    <h2>How did you find BandStagePlot?</h2>
+
+                                    <input type="radio" id="google-search" name="how-did-you-find-bandstageplot" value="Google search" required>
+                                    <label for="google-search">Google Search</label><br>
+
+                                    <input type="radio" id="ads" name="how-did-you-find-bandstageplot" value="ads" required>
+                                    <label for="ads">Ads</label><br>
+
+                                    <input type="radio" id="friend-recommended" name="how-did-you-find-bandstageplot" value="friend recommended" required>
+                                    <label for="friend-recommended">Friend Recommended</label><br>
+
+                                    <input type="radio" id="other" name="how-did-you-find-bandstageplot" value="other means" required>
+                                    <label for="other">Other</label><br>
+
+                                    <h2>Write a review!</h2>
+
+                                    <textarea rows="4" cols="auto" placeholder="Tell me about your experience or report a bug. (Optional)" style="resize: allows" id="review-text"></textarea><br>
+
+                                    <button type="submit" onclick="submitReview()">Submit Form</button>
+
+                                    </center>
+
+                                    <input type="reset" value="Clear Form"><br>
+
+                                    <center>
+                                </form>
+                            </h3>
+                        </center>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar (images) --> <div class="sidenav">
+
+            <div id="drums-1-tom">
+                <img src="./Images/drums-1-tom.png" style="width: 140px; height: auto; display: block; margin-left: auto; margin-right: auto;">
+                <center><h6 style="font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; text-align: center; position: relative; margin-top: -20px; background-color: white; color: black; width: 50px;">Drumset</h6></center>
+            </div>
+            <div id="drums-3-tom">
+                <img src="./Images/drums-3-tom.png" style="width: 195px; height: auto; display: block; margin-left: auto; margin-right: auto;">
+                <center><h6 style="font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; text-align: center; position: relative; margin-top: -20px; background-color: white; color: black; width: 50px;">Drumset</h6></center>
+            </div>
+            <!-- <div id="drums">
+                <img src="./Images/drums.png" style="width: 140px; height: auto; display: block; margin-left: auto; margin-right: auto;">
+                <center><h6 style="font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; text-align: center; position: relative; margin-top: -20px; background-color: white; color: black; width: 50px;">Drumset</h6></center>
+            </div> -->
+            <div id="e-guitar">
+                <img src="./Images/electric-guitar.png" style="width: auto; height: 100px; display: block; margin-left: auto; margin-right: auto;">
+                <center><h6 style="font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; text-align: center; position: relative; margin-top: -20px; background-color: white; color: black; width: 100px; white-space: nowrap;">Electric Guitar</h6></center>
+            </div>
+            <div id="b-guitar">
+                <img src="./Images/bass-guitar.png" style="width: auto; height: 110px; display: block; margin-left: auto; margin-right: auto;">
+                <center><h6 style="font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; text-align: center; position: relative; margin-top: -20px; background-color: white; color: black; width: 100px; white-space: nowrap;">Bass Guitar</h6></center>
+            </div>
+            <div id="mic-stand">
+                <img src="./Images/microphone-stand.png" style="width: auto; height: 125px; display: block; margin-left: auto; margin-right: auto;">
+                <center><h6 style="font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; text-align: center; position: relative; margin-top: -20px; background-color: white; color: black; width: 100px; white-space: nowrap;">Microphone Stand</h6></center>
+            </div>
+            <div id="mic">
+                <img src="./Images/microphone.png" style="width: auto; height: 65px; display: block; margin-left: auto; margin-right: auto;">
+                <center><h6 style="font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; text-align: center; position: relative; margin-top: -15px; background-color: white; color: black; width: 35px; white-space: nowrap;">Mic</h6></center>
+            </div>
+            <div id="g-amp">
+                <img src="./Images/guitar-amp.png" style="width: auto; height: 95px; display: block; margin-left: auto; margin-right: auto;">
+                <center><h6 style="font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; text-align: center; position: relative; margin-top: -20px; background-color: white; color: black; width: 85px; white-space: nowrap;">Guitar Amp</h6></center>
+            </div>
+            <div id="b-amp">
+                <img src="./Images/bass-amp.png" style="width: auto; height: 95px; display: block; margin-left: auto; margin-right: auto;">
+                <center><h6 style="font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; text-align: center; position: relative; margin-top: -20px; background-color: white; color: black; width: 85px; white-space: nowrap;">Bass Amp</h6></center>
+            </div>
+            <div id="p-board">
+                <img src="./Images/pedal-board.png" style="width: auto; height: 45px; display: block; margin-left: auto; margin-right: auto;">
+                <center><h6 style="font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; text-align: center; position: relative; margin-top: -0px; background-color: white; color: black; width: 85px; white-space: nowrap;">Pedal Board</h6></center>
+            </div>
+            <div id="keyboard">
+                <img src="./Images/keyboard.png" style="width: auto; height: 85px; display: block; margin-left: auto; margin-right: auto;">
+                <center><h6 style="font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; text-align: center; position: relative; margin-top: -20px; background-color: white; color: black; width: 85px; white-space: nowrap;">Keyboard</h6></center>
+            </div>
+            <div id="stage-monitor">
+                <img src="./Images/stage-monitor.png" style="width: auto; height: 85px; display: block; margin-left: auto; margin-right: auto;">
+                <center><h6 style="font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; text-align: center; position: relative; margin-top: -20px; background-color: white; color: black; width: 85px; white-space: nowrap;">Stage Monitor</h6></center>
+            </div>
+            <div id="person">
+                <img src="./Images/person.png" style="width: auto; height: 105px; display: block; margin-left: auto; margin-right: auto;">
+                <center><h6 style="font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; text-align: center; position: relative; margin-top: -20px; background-color: white; color: black; width: 85px; white-space: nowrap;">Person</h6></center>
+            </div>
+        </div>
+
+        <!-- Menu at bottom of sidenav --> <div class="menu"> 
+            <img src="./Images/hamburger-menu.png" style="height: 100%; display: block; margin-left: auto; margin-right: auto;" id="open-modal-btn" onclick="$('.modal').fadeIn();">
+        </div>
+ 
+        <!-- Page content --> <div class="main">
+            <!-- User title --> <h1 style="font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; z-index: 9999; text-align: center; position: relative; margin-top: 5px;" contenteditable="true" onfocus="if (this.innerText === 'Your title here...') { this.innerText = ''; }" onblur="if (this.innerText === '') { this.innerText = 'Your title here...'; }">
+                Your title here...
+            </h1>
+            
+            <!-- Stage front --> <h4 style="font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; z-index: 9999; text-align: center; position: relative; top: -20px;">
+                Front
+            </h4>
+
+        </div>
+
+        <!-- JS and stuff -->
+        <script src="./JS/draggable.js"></script>
+        <script src="./JS/modal.js"></script>
+        <script src="./JS/onstart.js"></script>   
+        <script src="./JS/screenshot.js"></script>
+        <script src="./JS/fs.js"></script>
+        <script src="./JS/json.js"></script>
+        <script src="./JS/background.js"></script>
+        <script src="./JS/submitreview.js"></script>
+        <script src="./JS/dark.js"></script>
+
+    </body>
+</html>

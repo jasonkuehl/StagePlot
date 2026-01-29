@@ -1,90 +1,119 @@
-#drums-1-tom {
+/* ===========================================
+   Equipment Item Styles
+   Styles for sidebar equipment items
+   =========================================== */
+
+/* Base styles for all equipment items */
+.equipment-item {
     position: relative;
-}
-#drums-1-tom:hover {
     cursor: pointer;
+    transition: all 0.15s ease;
 }
 
-#drums-3-tom {
-    position: relative;
-}
-#drums-3-tom:hover {
-    cursor: pointer;
+/* Individual item adjustments if needed */
+#drums-1-tom img {
+    max-width: 120px;
 }
 
-#e-guitar {
-    position: relative;
-}
-#e-guitar:hover {
-    cursor: pointer;
+#drums-3-tom img {
+    max-width: 160px;
 }
 
-#b-guitar {
-    position: relative;
-}
-#b-guitar:hover {
-    cursor: pointer;
+#e-guitar img,
+#b-guitar img {
+    max-height: 90px;
 }
 
-#mic-stand {
-    position: relative;
-}
-#mic-stand:hover {
-    cursor: pointer;
+#mic-stand img {
+    max-height: 100px;
 }
 
-#mic {
-    position: relative;
-}
-#mic:hover {
-    cursor: pointer;
+#mic img {
+    max-height: 55px;
 }
 
-#g-amp {
-    position: relative;
-}
-#g-amp:hover {
-    cursor: pointer;
+#g-amp img,
+#b-amp img {
+    max-height: 80px;
 }
 
-#b-amp {
-    position: relative;
-}
-#b-amp:hover {
-    cursor: pointer;
+#p-board img {
+    max-height: 40px;
 }
 
-#p-board {
-    position: relative;
-}
-#p-board:hover {
-    cursor: pointer;
+#keyboard img {
+    max-height: 70px;
 }
 
-#keyboard {
-    position: relative;
-}
-#keyboard:hover {
-    cursor: pointer;
+#stage-monitor img {
+    max-height: 70px;
 }
 
-#stage-monitor {
-    position: relative;
-}
-#stage-monitor:hover {
-    cursor: pointer;
+#person img {
+    max-height: 90px;
 }
 
-#person {
-    position: relative;
-}
-#person:hover {
-    cursor: pointer;
+/* Stage item specific styles */
+.stage-item {
+    position: absolute !important;
+    cursor: move;
+    user-select: none;
+    -webkit-user-select: none;
+    transition: transform 0.1s ease, box-shadow 0.15s ease, opacity 0.15s ease;
 }
 
-#im {
-    position: relative;
+.stage-item:hover {
+    z-index: 100 !important;
 }
-#im:hover {
-    cursor: pointer;
+
+.stage-item.selected {
+    outline: 2px dashed #2563eb;
+    outline-offset: 6px;
+    z-index: 101 !important;
+}
+
+.stage-item.dragging {
+    opacity: 0.85;
+    z-index: 1000 !important;
+    cursor: grabbing;
+}
+
+.stage-item img {
+    display: block;
+    max-height: 120px;
+    width: auto;
+    pointer-events: none;
+    -webkit-user-drag: none;
+}
+
+/* Larger drum kits on stage */
+.stage-item[data-item-type="drums-1-tom"] img {
+    max-height: 150px;
+}
+
+.stage-item[data-item-type="drums-3-tom"] img {
+    max-height: 180px;
+}
+
+/* Equipment category header */
+.equipment-category h4 {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: rgba(255, 255, 255, 0.5);
+    padding: 10px 8px 4px;
+    margin: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Item label in sidebar */
+.equipment-item .item-label {
+    display: block;
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.85);
+    text-align: center;
+    margin-top: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

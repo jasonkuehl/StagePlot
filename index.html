@@ -1,210 +1,478 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Create professional stage plots for bands, concerts, and musical performances. Drag and drop equipment to design your perfect stage layout.">
+    <meta name="keywords" content="stage plot, band setup, stage design, concert planning, music equipment layout">
+    <meta name="author" content="Noah Harper, Jason Harper">
 
-        <!-- Add SEO or smth idk -->
-        <meta charset="utf-8">
-        <meta name="description" content="A website that allows you to easily make and share your stage plots">
-        <meta name="keywords" content="stage, plot, plotting, band, stage creation">
-        <meta name="author" content="Noah Harper">
-        <meta name="author" content="Jason Harper">
+    <!-- Open Graph / Social Media -->
+    <meta property="og:title" content="Band Stage Plot - Create Your Stage Layout">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.bandstageplot.com/">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:description" content="Create professional stage plots for bands and concerts. Drag and drop to design your perfect stage layout.">
+    <meta property="og:image" content="https://diymusician.cdbaby.com/wp-content/uploads/2011/07/Screen-shot-2011-07-15-at-1.08.32-PM2.png">
 
-        <!-- Create embed thingamajig -->
-        <meta property="og:title" content="Band Stage Plot" />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://www.bandstageplot.com/" />
-        <meta property="og:locale" content="en_US" />
-        <meta property="og:description" content="A website that allows you to easily make and share your stage plots" />
-        <meta property="og:image" content="https://diymusician.cdbaby.com/wp-content/uploads/2011/07/Screen-shot-2011-07-15-at-1.08.32-PM2.png" />
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="./Images/favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="./Images/favicon.ico">
 
-        <!-- Import favicon -->
-        <link rel="icon" type="image/x-icon" href="./Images/favicon.ico">
-        <link rel="shortcut icon" type="image/x-icon" href="./Images/favicon.ico">
-
-        <!-- CSS imports -->
-        <link rel="stylesheet" href="./CSS/style.css">
-        <link rel="stylesheet" href="./CSS/items.css">
-        <link rel="stylesheet" href="./CSS/modal.css">
+    <!-- Preload critical resources -->
+    <link rel="preconnect" href="https://code.jquery.com">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="dns-prefetch" href="https://html2canvas.hertzen.com">
+    
+    <!-- CSS - Critical styles first -->
+    <link rel="stylesheet" href="./CSS/style.css">
+    <link rel="stylesheet" href="./CSS/items.css">
+    <link rel="stylesheet" href="./CSS/modal.css">
+    <link rel="stylesheet" href="./CSS/dark.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
+    <noscript>
         <link rel="stylesheet" href="./CSS/dark.css">
-        <link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    </noscript>
 
-        <!-- JS imports -->
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"></script>
-        <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <!-- JavaScript Libraries - using slim jQuery and deferred loading -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js" defer></script>
+    
+    <!-- Inline function definitions for onclick handlers -->
+    <script>
+    // Text label function - defined inline to ensure availability
+    function addTextToStage(defaultText) {
+        var text = defaultText || prompt('Enter text label:', 'Label');
+        if (!text || text.trim() === '') return;
+        
+        var $dropZone = $('#drop-zone');
+        var $textItem = $('<div>')
+            .addClass('stage-item text-item')
+            .attr('data-item-type', 'text-label')
+            .attr('data-rotation', 0)
+            .css({
+                position: 'absolute',
+                cursor: 'move',
+                left: '50%',
+                top: '40%',
+                transform: 'translate(-50%, -50%)',
+                background: 'rgba(148, 163, 184, 0.9)',
+                padding: '8px 14px',
+                borderRadius: '6px',
+                border: '2px solid transparent',
+                minWidth: '50px'
+            });
+        
+        var $textContent = $('<span>')
+            .addClass('text-content')
+            .attr('contenteditable', 'true')
+            .css({ fontSize: '1rem', fontWeight: '600', color: '#000000', outline: 'none', whiteSpace: 'nowrap' })
+            .text(text);
+        
+        $textItem.append($textContent);
+        
+        if ($dropZone.length) {
+            $dropZone.append($textItem);
+        } else {
+            $('.stage-area').append($textItem);
+        }
+        
+        // Center after append
+        setTimeout(function() {
+            var stageWidth = $dropZone.width() || $('.stage-area').width();
+            var stageHeight = $dropZone.height() || $('.stage-area').height();
+            $textItem.css({
+                left: (stageWidth / 2 - $textItem.outerWidth() / 2) + 'px',
+                top: (stageHeight / 2 - $textItem.outerHeight() / 2) + 'px',
+                transform: 'none'
+            });
+        }, 10);
+        
+        // Make draggable
+        $textItem.draggable({
+            containment: 'parent',
+            scroll: false,
+            start: function() { $(this).addClass('dragging'); if (typeof selectItem === 'function') selectItem(this); },
+            stop: function() { $(this).removeClass('dragging'); }
+        });
+        
+        // Click to select
+        $textItem.on('click', function(e) {
+            e.stopPropagation();
+            if (typeof selectItem === 'function') selectItem(this);
+        });
+        
+        // Double-click to edit
+        $textItem.on('dblclick', function(e) {
+            e.stopPropagation();
+            var $content = $(this).find('.text-content');
+            $content.focus();
+            var range = document.createRange();
+            range.selectNodeContents($content[0]);
+            var sel = window.getSelection();
+            sel.removeAllRanges();
+            sel.addRange(range);
+        });
+        
+        if (typeof showNotification === 'function') showNotification('Text label added');
+    }
+    
+    // Handle background image from toolbar
+    function handleToolbarBgImage(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var dropZone = document.getElementById('drop-zone');
+                var stageArea = document.querySelector('.stage-area');
+                var target = dropZone || stageArea;
+                if (target) {
+                    target.style.backgroundImage = 'url(' + e.target.result + ')';
+                    target.style.backgroundSize = '100% 100%';
+                    target.style.backgroundPosition = 'center';
+                    target.style.backgroundRepeat = 'no-repeat';
+                    if (typeof showNotification === 'function') showNotification('Background image set');
+                }
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    </script>
 
-        <!-- Set title -->
-        <title>Band Stage Plot</title>
+    <title>Band Stage Plot - Create Your Stage Layout</title>
+</head>
+<body>
 
-    </head>
-    <body>
+    <!-- Modal Dialog -->
+    <div class="modal" id="main-modal">
+        <div class="modal-content">
+            <button class="close" aria-label="Close modal">&times;</button>
+            <div id="tabs">
+                <ul class="tab-nav">
+                    <li><a href="#tabs-about">About</a></li>
+                    <li><a href="#tabs-functions">Functions</a></li>
+                    <li><a href="#tabs-review">Feedback</a></li>
+                </ul>
 
-        <!-- Modal --> <div class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <div id="tabs">
-                    <ul>
-                        <li><a href="#tabs-1">About</a></li>
-                        <li><a href="#tabs-2">Functions</a></li>
-                        <li><a href="#tabs-3">Review</a></li>
-                    </ul>
-                    <!-- Welcome tab --><div id="tabs-1">
-                        <center>
-                            <h1>
-                                Welcome to BandStagePlot!
-                            </h1>
-                            <h3>
-                                This is where you can create your stage plot by dragging and dropping the elements to your desired location.
-                                To get items onto the page, just click on whatever item you want in the side bar.
-                                To get rid of items, drag and drop them into the item bar.
-                                You can always come back to this page by clicking menu icon in the bottom left corner.
-                            </h3>
-                            <h2 style="color: red;">
-                                Attention mobile users! This website does not work on any touchscreen devices. Please move to a desktop workstation to use this website.
-                            </h2>
-                        </center>
+                <!-- About Tab -->
+                <div id="tabs-about" class="tab-content">
+                    <h1>Welcome to BandStagePlot!</h1>
+                    <p>Create professional stage plots by dragging and dropping equipment to your desired positions.</p>
+                    
+                    <div class="instructions">
+                        <h3>How to Use:</h3>
+                        <ul>
+                            <li><strong>Add Items:</strong> Click any item in the sidebar to add it to the stage</li>
+                            <li><strong>Move Items:</strong> Drag items anywhere on the stage area</li>
+                            <li><strong>Remove Items:</strong> Drag items back to the sidebar, or select and press Delete</li>
+                            <li><strong>Rotate Items:</strong> Select an item and use the rotate buttons in toolbar</li>
+                            <li><strong>Edit Title:</strong> Click the title at the top to customize it</li>
+                            <li><strong>Save:</strong> Use the camera button to save your stage plot as an image</li>
+                        </ul>
                     </div>
-                    <!-- Functions tab --><div id="tabs-2">
-                        <center>
-                            <h1>
-                                Functions
-                            </h1>
-                            <h3>
-                                <button onclick="navigator.clipboard.writeText('https://www.bandstageplot.com/'); alert('Link copied!')">Copy Site Link</button><br>
-                                <button onclick="capture()">Screenshot</button><br>
-                                <button onclick="toggleFullscreen()" id="fs-button">Fullscreen</button><br>
-                                <button onclick="location.reload()">Reset</button><br><br>
-                                <form>
-                                    <h2 for="bg-image">Import a Background Image</h2>
-                                    <input type="file" id="bg-image" name="bg-image" accept="image/*" placeholder="Example: user_background.png">
-                                </form>
-                            </h3>
-                
-                            <label class="switch">
-                                <input type="checkbox" onclick="darkMode()">
-                                <span class="slider round"></span>
-                                <h3 for="switch" style="font-size: 24px; position: relative; right: 225%; bottom: 130%; white-space: nowrap; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">Dark Mode</h3>
+
+                    <div class="mobile-warning">
+                        <p><strong>Note:</strong> This application works best on desktop devices with a mouse or trackpad.</p>
+                    </div>
+                </div>
+
+                <!-- Functions Tab -->
+                <div id="tabs-functions" class="tab-content">
+                    <h1>Functions</h1>
+                    
+                    <div class="function-grid">
+                        <button class="btn btn-primary" onclick="capture()">
+                            <i class="fas fa-camera"></i> Save as Image
+                        </button>
+                        <button class="btn btn-secondary" onclick="captureToClipboard()">
+                            <i class="fas fa-clipboard"></i> Copy to Clipboard
+                        </button>
+                        <button class="btn btn-secondary" onclick="navigator.clipboard.writeText('https://www.bandstageplot.com/'); showNotification('Link copied!')">
+                            <i class="fas fa-link"></i> Copy Site Link
+                        </button>
+                        <button class="btn btn-secondary" onclick="toggleFullscreen()" id="fs-button">
+                            <i class="fas fa-expand"></i> Fullscreen
+                        </button>
+                        <button class="btn btn-danger" onclick="clearStage()">
+                            <i class="fas fa-trash"></i> Clear Stage
+                        </button>
+                        <button class="btn btn-secondary" onclick="location.reload()">
+                            <i class="fas fa-redo"></i> Reset All
+                        </button>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3>Background Image</h3>
+                        <div class="file-input-wrapper">
+                            <input type="file" id="bg-image" name="bg-image" accept="image/*">
+                            <label for="bg-image" class="btn btn-outline">
+                                <i class="fas fa-image"></i> Choose Image
                             </label>
-                        </center>
+                            <button class="btn btn-outline btn-small" onclick="clearBackground()">
+                                <i class="fas fa-times"></i> Clear
+                            </button>
+                        </div>
                     </div>
-                    <!-- Review tab --><div id="tabs-3">
-                        <center>
-                            <h3>
-                                <form id="review">
-                                    <h2>How did you find BandStagePlot?</h2>
 
-                                    <input type="radio" id="google-search" name="how-did-you-find-bandstageplot" value="Google search" required>
-                                    <label for="google-search">Google Search</label><br>
-
-                                    <input type="radio" id="ads" name="how-did-you-find-bandstageplot" value="ads" required>
-                                    <label for="ads">Ads</label><br>
-
-                                    <input type="radio" id="friend-recommended" name="how-did-you-find-bandstageplot" value="friend recommended" required>
-                                    <label for="friend-recommended">Friend Recommended</label><br>
-
-                                    <input type="radio" id="other" name="how-did-you-find-bandstageplot" value="other means" required>
-                                    <label for="other">Other</label><br>
-
-                                    <h2>Write a review!</h2>
-
-                                    <textarea rows="4" cols="auto" placeholder="Tell me about your experience or report a bug. (Optional)" style="resize: allows" id="review-text"></textarea><br>
-
-                                    <button type="submit" onclick="submitReview()">Submit Form</button>
-
-                                    </center>
-
-                                    <input type="reset" value="Clear Form"><br>
-
-                                    <center>
-                                </form>
-                            </h3>
-                        </center>
+                    <div class="settings-section">
+                        <h3>Appearance</h3>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="dark-mode-toggle" onchange="toggleDarkMode()">
+                            <span class="toggle-slider"></span>
+                            <span class="toggle-label">Dark Mode</span>
+                        </label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="grid-toggle" onchange="toggleGrid()">
+                            <span class="toggle-slider"></span>
+                            <span class="toggle-label">Show Grid</span>
+                        </label>
                     </div>
+                </div>
+
+                <!-- Feedback Tab -->
+                <div id="tabs-review" class="tab-content">
+                    <h1>Send Feedback</h1>
+                    
+                    <form id="review-form" onsubmit="submitReview(event)">
+                        <div class="form-group">
+                            <label>How did you find BandStagePlot?</label>
+                            <div class="radio-group">
+                                <label class="radio-option">
+                                    <input type="radio" name="how-found" value="google" required>
+                                    <span>Google Search</span>
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="how-found" value="social">
+                                    <span>Social Media</span>
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="how-found" value="friend">
+                                    <span>Friend Recommended</span>
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="how-found" value="other">
+                                    <span>Other</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="review-text">Your Feedback</label>
+                            <textarea id="review-text" rows="4" placeholder="Share your experience or report a bug..."></textarea>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">Submit Feedback</button>
+                            <button type="reset" class="btn btn-outline">Clear Form</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Sidebar (images) --> <div class="sidenav">
+    <!-- Main Container -->
+    <div class="app-container">
+        
+        <!-- Sidebar with Equipment -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>Equipment</h2>
+                <!-- Search Box -->
+                <div class="search-box">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="equipment-search" placeholder="Search..." autocomplete="off">
+                    <button class="search-clear" id="search-clear" title="Clear search">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
 
-            <div id="drums-1-tom">
-                <img src="./Images/drums-1-tom.png" style="width: 140px; height: auto; display: block; margin-left: auto; margin-right: auto;">
-                <center><h6 style="font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; text-align: center; position: relative; margin-top: -20px; background-color: white; color: black; width: 50px;">Drumset</h6></center>
+            <!-- Stage Templates -->
+            <div class="stage-templates">
+                <label for="stage-select">Stage Background:</label>
+                <select id="stage-select" onchange="loadStageTemplate(this.value)">
+                    <option value="blank" selected>Blank Stage</option>
+                    <!-- Stages from Images/stages/ folder will be added here automatically -->
+                </select>
             </div>
-            <div id="drums-3-tom">
-                <img src="./Images/drums-3-tom.png" style="width: 195px; height: auto; display: block; margin-left: auto; margin-right: auto;">
-                <center><h6 style="font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; text-align: center; position: relative; margin-top: -20px; background-color: white; color: black; width: 50px;">Drumset</h6></center>
-            </div>
-            <!-- <div id="drums">
-                <img src="./Images/drums.png" style="width: 140px; height: auto; display: block; margin-left: auto; margin-right: auto;">
-                <center><h6 style="font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; text-align: center; position: relative; margin-top: -20px; background-color: white; color: black; width: 50px;">Drumset</h6></center>
-            </div> -->
-            <div id="e-guitar">
-                <img src="./Images/electric-guitar.png" style="width: auto; height: 100px; display: block; margin-left: auto; margin-right: auto;">
-                <center><h6 style="font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; text-align: center; position: relative; margin-top: -20px; background-color: white; color: black; width: 100px; white-space: nowrap;">Electric Guitar</h6></center>
-            </div>
-            <div id="b-guitar">
-                <img src="./Images/bass-guitar.png" style="width: auto; height: 110px; display: block; margin-left: auto; margin-right: auto;">
-                <center><h6 style="font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; text-align: center; position: relative; margin-top: -20px; background-color: white; color: black; width: 100px; white-space: nowrap;">Bass Guitar</h6></center>
-            </div>
-            <div id="mic-stand">
-                <img src="./Images/microphone-stand.png" style="width: auto; height: 125px; display: block; margin-left: auto; margin-right: auto;">
-                <center><h6 style="font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; text-align: center; position: relative; margin-top: -20px; background-color: white; color: black; width: 100px; white-space: nowrap;">Microphone Stand</h6></center>
-            </div>
-            <div id="mic">
-                <img src="./Images/microphone.png" style="width: auto; height: 65px; display: block; margin-left: auto; margin-right: auto;">
-                <center><h6 style="font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; text-align: center; position: relative; margin-top: -15px; background-color: white; color: black; width: 35px; white-space: nowrap;">Mic</h6></center>
-            </div>
-            <div id="g-amp">
-                <img src="./Images/guitar-amp.png" style="width: auto; height: 95px; display: block; margin-left: auto; margin-right: auto;">
-                <center><h6 style="font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; text-align: center; position: relative; margin-top: -20px; background-color: white; color: black; width: 85px; white-space: nowrap;">Guitar Amp</h6></center>
-            </div>
-            <div id="b-amp">
-                <img src="./Images/bass-amp.png" style="width: auto; height: 95px; display: block; margin-left: auto; margin-right: auto;">
-                <center><h6 style="font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; text-align: center; position: relative; margin-top: -20px; background-color: white; color: black; width: 85px; white-space: nowrap;">Bass Amp</h6></center>
-            </div>
-            <div id="p-board">
-                <img src="./Images/pedal-board.png" style="width: auto; height: 45px; display: block; margin-left: auto; margin-right: auto;">
-                <center><h6 style="font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; text-align: center; position: relative; margin-top: -0px; background-color: white; color: black; width: 85px; white-space: nowrap;">Pedal Board</h6></center>
-            </div>
-            <div id="keyboard">
-                <img src="./Images/keyboard.png" style="width: auto; height: 85px; display: block; margin-left: auto; margin-right: auto;">
-                <center><h6 style="font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; text-align: center; position: relative; margin-top: -20px; background-color: white; color: black; width: 85px; white-space: nowrap;">Keyboard</h6></center>
-            </div>
-            <div id="stage-monitor">
-                <img src="./Images/stage-monitor.png" style="width: auto; height: 85px; display: block; margin-left: auto; margin-right: auto;">
-                <center><h6 style="font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; text-align: center; position: relative; margin-top: -20px; background-color: white; color: black; width: 85px; white-space: nowrap;">Stage Monitor</h6></center>
-            </div>
-            <div id="person">
-                <img src="./Images/person.png" style="width: auto; height: 105px; display: block; margin-left: auto; margin-right: auto;">
-                <center><h6 style="font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; text-align: center; position: relative; margin-top: -20px; background-color: white; color: black; width: 85px; white-space: nowrap;">Person</h6></center>
-            </div>
-        </div>
-
-        <!-- Menu at bottom of sidenav --> <div class="menu"> 
-            <img src="./Images/hamburger-menu.png" style="height: 100%; display: block; margin-left: auto; margin-right: auto;" id="open-modal-btn" onclick="$('.modal').fadeIn();">
-        </div>
- 
-        <!-- Page content --> <div class="main">
-            <!-- User title --> <h1 style="font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; z-index: 9999; text-align: center; position: relative; margin-top: 5px;" contenteditable="true" onfocus="if (this.innerText === 'Your title here...') { this.innerText = ''; }" onblur="if (this.innerText === '') { this.innerText = 'Your title here...'; }">
-                Your title here...
-            </h1>
             
-            <!-- Stage front --> <h4 style="font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; z-index: 9999; text-align: center; position: relative; top: -20px;">
-                Front
-            </h4>
+            <div class="equipment-list" id="equipment-panel">
+                <!-- Custom equipment from Images/custom/ folder will be added here automatically -->
+                
+                <!-- Drums -->
+                <div class="equipment-category" data-category="drums">
+                    <h4>Drums</h4>
+                    <div class="equipment-item" id="drums-1-tom" data-name="Drumset" data-keywords="drums kit percussion snare kick tom cymbal">
+                        <img src="./Images/drums-1-tom.png" alt="Drumset with 1 tom" draggable="false" loading="lazy" decoding="async">
+                        <span class="item-label">Drumset</span>
+                    </div>
+                    <div class="equipment-item" id="drums-3-tom" data-name="Drumset (3 Tom)" data-keywords="drums kit percussion snare kick tom cymbal large">
+                        <img src="./Images/drums-3-tom.png" alt="Drumset with 3 toms" draggable="false" loading="lazy" decoding="async">
+                        <span class="item-label">Drumset (3T)</span>
+                    </div>
+                </div>
 
-        </div>
+                <!-- String Instruments -->
+                <div class="equipment-category" data-category="instruments">
+                    <h4>Instruments</h4>
+                    <div class="equipment-item" id="e-guitar" data-name="Electric Guitar" data-keywords="guitar electric string lead rhythm">
+                        <img src="./Images/electric-guitar.png" alt="Electric Guitar" draggable="false" loading="lazy" decoding="async">
+                        <span class="item-label">Electric Guitar</span>
+                    </div>
+                    <div class="equipment-item" id="b-guitar" data-name="Bass Guitar" data-keywords="bass guitar string low">
+                        <img src="./Images/bass-guitar.png" alt="Bass Guitar" draggable="false" loading="lazy" decoding="async">
+                        <span class="item-label">Bass Guitar</span>
+                    </div>
+                    <div class="equipment-item" id="keyboard" data-name="Keyboard" data-keywords="keyboard piano keys synth synthesizer">
+                        <img src="./Images/keyboard.png" alt="Keyboard" draggable="false" loading="lazy" decoding="async">
+                        <span class="item-label">Keyboard</span>
+                    </div>
+                </div>
 
-        <!-- JS and stuff -->
-        <script src="./JS/draggable.js"></script>
-        <script src="./JS/modal.js"></script>
-        <script src="./JS/onstart.js"></script>   
-        <script src="./JS/screenshot.js"></script>
-        <script src="./JS/fs.js"></script>
-        <script src="./JS/json.js"></script>
-        <script src="./JS/background.js"></script>
-        <script src="./JS/submitreview.js"></script>
-        <script src="./JS/dark.js"></script>
+                <!-- Microphones -->
+                <div class="equipment-category" data-category="microphones">
+                    <h4>Microphones</h4>
+                    <div class="equipment-item" id="mic-stand" data-name="Mic Stand" data-keywords="microphone stand vocal singer">
+                        <img src="./Images/microphone-stand.png" alt="Microphone Stand" draggable="false" loading="lazy" decoding="async">
+                        <span class="item-label">Mic Stand</span>
+                    </div>
+                    <div class="equipment-item" id="mic" data-name="Microphone" data-keywords="microphone mic vocal singer handheld">
+                        <img src="./Images/microphone.png" alt="Microphone" draggable="false" loading="lazy" decoding="async">
+                        <span class="item-label">Microphone</span>
+                    </div>
+                    <div class="equipment-item" id="mic" data-name="wireless" data-keywords="microphone mic vocal singer handheld">
+                        <img src="./Images/wireless.jpg" alt="Microphone" draggable="false" loading="lazy" decoding="async">
+                        <span class="item-label">Microphone</span>
+                    </div>
+                </div>
 
-    </body>
+                <!-- Amplifiers -->
+                <div class="equipment-category" data-category="amplifiers">
+                    <h4>Amplifiers</h4>
+                    <div class="equipment-item" id="g-amp" data-name="Guitar Amp" data-keywords="amplifier amp guitar speaker cabinet combo">
+                        <img src="./Images/guitar-amp.png" alt="Guitar Amplifier" draggable="false" loading="lazy" decoding="async">
+                        <span class="item-label">Guitar Amp</span>
+                    </div>
+                    <div class="equipment-item" id="b-amp" data-name="Bass Amp" data-keywords="amplifier amp bass speaker cabinet combo">
+                        <img src="./Images/bass-amp.png" alt="Bass Amplifier" draggable="false" loading="lazy" decoding="async">
+                        <span class="item-label">Bass Amp</span>
+                    </div>
+                </div>
+
+                <!-- Other Equipment -->
+                <div class="equipment-category" data-category="other">
+                    <h4>Other</h4>
+                    <div class="equipment-item" id="p-board" data-name="Pedal Board" data-keywords="pedal board effects fx pedalboard stompbox">
+                        <img src="./Images/pedal-board.png" alt="Pedal Board" draggable="false" loading="lazy" decoding="async">
+                        <span class="item-label">Pedal Board</span>
+                    </div>
+                    <div class="equipment-item" id="stage-monitor" data-name="Stage Monitor" data-keywords="monitor wedge speaker floor">
+                        <img src="./Images/stage-monitor.png" alt="Stage Monitor" draggable="false" loading="lazy" decoding="async">
+                        <span class="item-label">Monitor</span>
+                    </div>
+                    <div class="equipment-item" id="person" data-name="Person" data-keywords="person musician player singer vocalist band member">
+                        <img src="./Images/person.png" alt="Person" draggable="false" loading="lazy" decoding="async">
+                        <span class="item-label">Person</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Menu Button -->
+            <div class="sidebar-footer">
+                <button class="menu-btn" id="open-modal-btn" aria-label="Open menu" onclick="document.getElementById('main-modal').style.display='flex'">
+                    <i class="fas fa-bars"></i>
+                    <span>Menu</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Stage Area -->
+        <main class="stage-area" id="stage">
+            <!-- Toolbar -->
+            <div class="toolbar no-capture">
+                <button class="tool-btn" onclick="capture()" title="Save stage as PNG image">
+                    <i class="fas fa-camera"></i>
+                </button>
+                <button class="tool-btn" onclick="captureToClipboard()" title="Copy stage to clipboard">
+                    <i class="fas fa-clipboard"></i>
+                </button>
+                <div class="toolbar-divider"></div>
+                <button class="tool-btn" onclick="rotateSelected(-15)" title="Rotate selected item left 15°">
+                    <i class="fas fa-undo"></i>
+                </button>
+                <button class="tool-btn" onclick="rotateSelected(15)" title="Rotate selected item right 15°">
+                    <i class="fas fa-redo"></i>
+                </button>
+                <button class="tool-btn" onclick="resizeSelected(1.2)" title="Increase size of selected item">
+                    <i class="fas fa-search-plus"></i>
+                </button>
+                <button class="tool-btn" onclick="resizeSelected(0.8)" title="Decrease size of selected item">
+                    <i class="fas fa-search-minus"></i>
+                </button>
+                <button class="tool-btn" onclick="copySelected()" title="Copy selected item (Ctrl+C)">
+                    <i class="fas fa-copy"></i>
+                </button>
+                <button class="tool-btn" onclick="pasteItem()" title="Paste copied item (Ctrl+V)">
+                    <i class="fas fa-paste"></i>
+                </button>
+                <button class="tool-btn" onclick="deleteSelected()" title="Delete selected item">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div class="toolbar-divider"></div>
+                <button class="tool-btn" onclick="addTextToStage()" title="Add text label to stage">
+                    <i class="fas fa-font"></i>
+                </button>
+                <button class="tool-btn" onclick="document.getElementById('toolbar-bg-image').click()" title="Change background image">
+                    <i class="fas fa-image"></i>
+                </button>
+                <input type="file" id="toolbar-bg-image" accept="image/*" style="display:none" onchange="handleToolbarBgImage(this)">
+                <div class="toolbar-divider"></div>
+                <button class="tool-btn" onclick="toggleFullscreen()" title="Toggle fullscreen mode">
+                    <i class="fas fa-expand"></i>
+                </button>
+                <button class="tool-btn" onclick="clearStage()" title="Clear all items from stage">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
+                <button class="tool-btn" onclick="location.reload()" title="Reset everything and reload page">
+                    <i class="fas fa-sync"></i>
+                </button>
+                <div class="toolbar-divider"></div>
+                <button class="tool-btn" onclick="$('#main-modal').fadeIn()" title="Open settings menu">
+                    <i class="fas fa-cog"></i>
+                </button>
+            </div>
+
+            <!-- Editable Title -->
+            <h1 class="stage-title" contenteditable="true" 
+                onfocus="if (this.innerText === 'Your Stage Plot Title') { this.innerText = ''; this.classList.add('editing'); }" 
+                onblur="if (this.innerText.trim() === '') { this.innerText = 'Your Stage Plot Title'; } this.classList.remove('editing');">
+                Your Stage Plot Title
+            </h1>
+
+            <!-- Stage Labels -->
+            <div class="stage-labels">
+                <span class="stage-label stage-front">FRONT OF STAGE / AUDIENCE</span>
+                <span class="stage-label stage-back">BACK OF STAGE</span>
+            </div>
+
+            <!-- Drop zone for items -->
+            <div class="drop-zone" id="drop-zone"></div>
+        </main>
+    </div>
+
+    <!-- Scripts - deferred for faster initial render -->
+    <script src="./JS/draggable.js" defer></script>
+    <script src="./JS/modal.js" defer></script>
+    <script src="./JS/onstart.js" defer></script>
+    <script src="./JS/screenshot.js" defer></script>
+    <script src="./JS/fs.js" defer></script>
+    <script src="./JS/background.js" defer></script>
+    <script src="./JS/dark.js" defer></script>
+    <script src="./JS/templates.js" defer></script>
+    <script src="./JS/custom-equipment.js" defer></script>
+
+</body>
 </html>

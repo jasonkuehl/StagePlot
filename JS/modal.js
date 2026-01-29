@@ -1,22 +1,89 @@
-// Get the modal element
-const modal = document.querySelector('.modal');
+/**
+ * Modal Management
+ */
 
-// Get the button that opens the modal
-const openModalBtn = document.querySelector('#open-modal-btn');
+// Initialize when DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+    // Get modal elements
+    const modal = document.querySelector('.modal') || document.getElementById('main-modal');
+    const openModalBtn = document.getElementById('open-modal-btn');
+    const closeBtn = modal ? modal.querySelector('.close') : null;
 
-// Get the <span> element that closes the modal
-const closeBtn = modal.querySelector('.close');
+    // Initialize jQuery UI tabs
+    if (typeof $ !== 'undefined' && $('#tabs').length) {
+        $('#tabs').tabs({
+            classes: {
+                'ui-tabs-nav': 'tab-nav',
+                'ui-tabs-panel': 'tab-content'
+            }
+        });
+    }
 
-// When the user clicks on <span> (x), close the modal
-closeBtn.addEventListener('click', () => {
-  // modal.style.display = 'none';
-  $('.modal').fadeOut();
-});
+    // Open modal on menu button click
+    if (openModalBtn && modal) {
+        openModalBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            modal.style.display = 'flex';
+            if (typeof $ !== 'undefined') {
+                $(modal).hide().fadeIn(200);
+            }
+        });
+    }
 
-// When the user clicks anywhere outside of the modal, close it
-window.addEventListener('click', (event) => {
-  if (event.target == modal) {
-    // modal.style.display = 'none';
-    $('.modal').fadeOut();
-  }
+    // Close modal on X click
+    if (closeBtn && modal) {
+        closeBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (typeof $ !== 'undefined') {
+                $(modal).fadeOut(200);
+            } else {
+                modal.style.display = 'none';
+            }
+        });
+    }
+
+    // Close modal on outside click
+    if (modal) {
+        modal.addEventListener('click', function(event) {
+            if (event.target === modal) {
+                if (typeof $ !== 'undefined') {
+                    $(modal).fadeOut(200);
+                } else {
+                    modal.style.display = 'none';
+                }
+            }
+        });
+    }
+
+    // Close modal on Escape key
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape' && modal && modal.style.display !== 'none') {
+            if (typeof $ !== 'undefined') {
+                $(modal).fadeOut(200);
+            } else {
+                modal.style.display = 'none';
+            }
+        }
+    });
+
+    // Expose functions globally
+    window.showModal = function() {
+        if (modal) {
+            modal.style.display = 'flex';
+            if (typeof $ !== 'undefined') {
+                $(modal).hide().fadeIn(200);
+            }
+        }
+    };
+
+    window.hideModal = function() {
+        if (modal) {
+            if (typeof $ !== 'undefined') {
+                $(modal).fadeOut(200);
+            } else {
+                modal.style.display = 'none';
+            }
+        }
+    };
 });

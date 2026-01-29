@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+  stageplot:
+    build: .
+    ports:
+      - "8088:80"
+    volumes:
+      # Mount folders so you can edit files without rebuilding
+      - ./Images/stages:/usr/share/nginx/html/Images/stages
+      - ./Images/custom:/usr/share/nginx/html/Images/custom
+      - ./JS:/usr/share/nginx/html/JS
+      - ./CSS:/usr/share/nginx/html/CSS
+      - ./index.html:/usr/share/nginx/html/index.html
+    restart: unless-stopped

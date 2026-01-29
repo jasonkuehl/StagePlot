@@ -1,3 +1,179 @@
-.dark {
-    background-color: rgb(80, 80, 80);
+/* ===========================================
+   Dark Mode Styles
+   =========================================== */
+
+body.dark-mode {
+    --bg-primary: #0f172a;
+    --bg-secondary: #1e293b;
+    --text-primary: #f1f5f9;
+    --text-secondary: #94a3b8;
+    --border-color: #334155;
+}
+
+body.dark-mode .stage-area {
+    background-color: var(--bg-secondary);
+}
+
+body.dark-mode .stage-area.has-grid {
+    background-image: 
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+}
+
+body.dark-mode .toolbar {
+    background: rgba(30, 41, 59, 0.95);
+}
+
+body.dark-mode .tool-btn {
+    color: var(--text-secondary);
+}
+
+body.dark-mode .tool-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+}
+
+body.dark-mode .toolbar-divider {
+    background: var(--border-color);
+}
+
+body.dark-mode .stage-title {
+    color: var(--text-primary);
+}
+
+body.dark-mode .stage-title:hover {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+body.dark-mode .stage-title:focus {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+body.dark-mode .stage-label {
+    color: var(--text-secondary);
+}
+
+body.dark-mode .stage-item .item-label {
+    background: rgba(30, 41, 59, 0.9);
+    color: var(--text-primary);
+}
+
+/* Dark Modal */
+body.dark-mode .modal-content {
+    background: #1e293b;
+    color: var(--text-primary);
+}
+
+body.dark-mode .tab-nav,
+body.dark-mode .ui-tabs .ui-tabs-nav {
+    background: #0f172a;
+}
+
+body.dark-mode .tab-nav li a,
+body.dark-mode .ui-tabs .ui-tabs-nav li a {
+    color: var(--text-secondary);
+}
+
+body.dark-mode .tab-nav li a:hover,
+body.dark-mode .ui-tabs .ui-tabs-nav li a:hover {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+body.dark-mode .ui-tabs .ui-tabs-nav li.ui-tabs-active a,
+body.dark-mode .ui-tabs .ui-tabs-nav li.ui-state-active a {
+    background: #1e293b;
+    color: #60a5fa;
+}
+
+body.dark-mode .tab-content h1 {
+    color: var(--text-primary);
+}
+
+body.dark-mode .close {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-secondary);
+}
+
+body.dark-mode .close:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+}
+
+body.dark-mode .instructions {
+    background: #0f172a;
+}
+
+body.dark-mode .instructions li {
+    color: var(--text-secondary);
+}
+
+body.dark-mode .mobile-warning {
+    background: #422006;
+    border-color: #d97706;
+}
+
+body.dark-mode .mobile-warning p {
+    color: #fcd34d;
+}
+
+body.dark-mode .btn-secondary {
+    background: #334155;
+    color: var(--text-primary);
+}
+
+body.dark-mode .btn-secondary:hover {
+    background: #475569;
+}
+
+body.dark-mode .btn-outline {
+    border-color: var(--border-color);
+    color: var(--text-primary);
+}
+
+body.dark-mode .btn-outline:hover {
+    background: #334155;
+}
+
+body.dark-mode .toggle-slider {
+    background: #475569;
+}
+
+body.dark-mode .radio-option {
+    background: #334155;
+    color: var(--text-primary);
+}
+
+body.dark-mode .radio-option:hover {
+    background: #475569;
+}
+
+body.dark-mode .radio-option span {
+    color: var(--text-primary);
+}
+
+body.dark-mode textarea {
+    background: #0f172a;
+    border-color: var(--border-color);
+    color: var(--text-primary);
+}
+
+body.dark-mode textarea:focus {
+    border-color: #60a5fa;
+}
+
+body.dark-mode .settings-section {
+    border-top-color: var(--border-color);
+}
+
+body.dark-mode .settings-section h3,
+body.dark-mode .form-group label,
+body.dark-mode .toggle-label {
+    color: var(--text-primary);
+}
+
+/* Notification in dark mode */
+body.dark-mode .notification {
+    background: var(--text-primary);
+    color: var(--bg-primary);
 }

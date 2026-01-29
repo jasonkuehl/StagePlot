@@ -1,40 +1,170 @@
-/* Modal styles */
+/* ===========================================
+   Modal Styles
+   =========================================== */
+
 .modal {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: fixed; /* Stay in place */
-  z-index: 9999999; /* Sit on top */
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgba(0,0,0,0.6); /* Black w/ opacity */
-  backdrop-filter: blur(10px); /* Add a blur effect to the background */
+    display: none;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    z-index: 10000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(8px);
 }
 
 .modal-content {
-  background-color: #fefefe;
-  margin: 0 auto; /* center align horizontally */
-  padding: 10px;
-  width: 40%; /* Could be more or less, depending on screen size */
-  height: auto;
-  border-radius: 10px; /* Add rounded corners to the modal */
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    background-color: #ffffff;
+    margin: 20px;
+    padding: 0;
+    width: 100%;
+    max-width: 560px;
+    max-height: 90vh;
+    border-radius: 16px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    font-family: var(--font-primary, 'Segoe UI', system-ui, sans-serif);
+    overflow: hidden;
+    animation: modalSlideIn 0.3s ease;
 }
 
-/* Close button styles */
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Close Button */
 .close {
-  color: #aaa;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.05);
+    border: none;
+    border-radius: 8px;
+    color: #64748b;
+    font-size: 24px;
+    font-weight: 300;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    z-index: 10;
 }
 
-.close:hover,
-.close:focus {
-  color: black;
-  text-decoration: none;
-  cursor: pointer;
+.close:hover {
+    background: rgba(0, 0, 0, 0.1);
+    color: #1e293b;
+}
+
+/* jQuery UI Tabs Override */
+#tabs {
+    border: none;
+    background: transparent;
+    padding: 0;
+}
+
+.ui-tabs .ui-tabs-nav,
+.tab-nav {
+    display: flex;
+    background: #f1f5f9;
+    padding: 8px;
+    margin: 0;
+    border: none;
+    border-radius: 0;
+    list-style: none;
+}
+
+.ui-tabs .ui-tabs-nav li,
+.tab-nav li {
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+    flex: 1;
+}
+
+.ui-tabs .ui-tabs-nav li a,
+.tab-nav li a {
+    display: block;
+    padding: 10px 16px;
+    text-align: center;
+    text-decoration: none;
+    color: #64748b;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border-radius: 8px;
+    transition: all 0.15s ease;
+}
+
+.ui-tabs .ui-tabs-nav li a:hover,
+.tab-nav li a:hover {
+    color: #1e293b;
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.ui-tabs .ui-tabs-nav li.ui-tabs-active a,
+.ui-tabs .ui-tabs-nav li.ui-state-active a,
+.tab-nav li.active a {
+    background: #ffffff;
+    color: #2563eb;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Tab Content */
+.ui-tabs .ui-tabs-panel,
+.tab-content {
+    padding: 24px;
+    border: none;
+    background: transparent;
+    overflow-y: auto;
+    max-height: calc(90vh - 100px);
+}
+
+.tab-content h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 12px;
+}
+
+.tab-content p {
+    color: #64748b;
+    line-height: 1.6;
+    margin-bottom: 16px;
+}
+
+/* Hide inactive tabs */
+.tab-content:not(.active) {
+    display: none;
+}
+
+/* Fix jQuery UI states */
+.ui-state-default,
+.ui-widget-content .ui-state-default {
+    border: none;
+    background: transparent;
+}
+
+.ui-state-hover,
+.ui-widget-content .ui-state-hover {
+    border: none;
+    background: transparent;
+}
+
+.ui-state-active,
+.ui-widget-content .ui-state-active {
+    border: none;
+    background: transparent;
 }
