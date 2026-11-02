@@ -15,4 +15,7 @@ jobs:
     steps:
     - uses: https://git.yolo.fail/actions/checkout@v4
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+      # the runner shares the host's Docker, so remove the test image afterwards
+      run: |
+        docker build . --file Dockerfile --tag "stageplot-ci:${{ github.run_id }}"
+        docker rmi "stageplot-ci:${{ github.run_id }}"
